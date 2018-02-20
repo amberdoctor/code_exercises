@@ -1,0 +1,15 @@
+Status,Name,Target Type,Greeting,Number
+Active,Bar0,City,"Hello,World",42
+Inactive,Bar1,City,Hi,9001
+Doing Good,Bar2,Country,Hey Man,525600
+Active,Bar3,City,"Hello,World",1
+Inactive,Bar4,City,Hi,9002
+Doing Good,Bar5,Country,Hey Man,96
+Doing Good,Bar6,Country,Hey Man,121
+Inactive,Bar7,City,"Hello,World",10
+Active,Bar8,City,Hi,9003
+Active,Bar9,Country,Hey Man,67
+Doing Good,Bar10,City,"Hello,World",97
+Active,Bar11,City,Hi,9004
+Active,Bar12,Country,Hey Man,525
+Active,Bar13,Country,Hey Man,5600
