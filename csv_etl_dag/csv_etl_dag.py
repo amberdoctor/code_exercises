@@ -23,17 +23,17 @@ def aggregate_top_in_field(list_of_functions, name_of_field='Name'):
 
 def print_top_in_field(list_of_functions, number_to_print=10):
     def print_top(dict_fieldname_counts):
+
         # TODO how to handle ties for nth place - business logic clarification not available - assumption made to not show additional tied names and use python's sort to handle order of who gets printed
         print('Printing the {0} most often repeated values from the "{1}" column.'.format(number_to_print,
-                                                                                          dict_fieldname_counts['fieldname']))
+                                                                                          dict_fieldname_counts[
+                                                                                              'fieldname']))
         name_count_list = dict_fieldname_counts['counts'].items()
-        sorted_name_count_list = sorted(name_count_list, key=itemgetter(1), reverse=True)
-        i = 0
-        while i < number_to_print and i < len(sorted_name_count_list):
-            print(sorted_name_count_list[i][0])
-            i += 1
-        # TODO how to handle too few names - busines logic clarification not available - assumption make a print statement to indicate the shortage
-        if len(sorted_name_count_list) < number_to_print:
+        top_names = sorted(name_count_list, key=itemgetter(1), reverse=True)[:number_to_print]
+        for name_count in top_names:
+            print(name_count[0])
+        # TODO how to handle too few names - business logic clarification not available - assumption make a print statement to indicate the shortage
+        if len(top_names) < number_to_print:
             print('Notice: There were less names than the requested number to print.')
         for func in list_of_functions:
             func(dict_fieldname_counts)
@@ -42,10 +42,7 @@ def print_top_in_field(list_of_functions, number_to_print=10):
 
 def apply_column_filter(list_of_functions, column_name='Status', value='Active'):
     def apply_filter(data):
-        new_data = []
-        for row in data:
-            if row[column_name] == value:
-                new_data.append(row)
+        new_data = list(filter(lambda x: x[column_name] == value, data))
         for func in list_of_functions:
             func(new_data)
     return apply_filter
@@ -53,15 +50,7 @@ def apply_column_filter(list_of_functions, column_name='Status', value='Active')
 
 def group_by_column(list_of_functions, column_name='Target Type'):
     def group_by(list_of_ordered_dicts):
-        list_of_ordered_dicts_sorted_by_column = []
-        dict_by_column_name = {}
-        for row in list_of_ordered_dicts:
-            if row[column_name] in dict_by_column_name:
-                dict_by_column_name[row[column_name]].append(row)
-            else:
-                dict_by_column_name[row[column_name]] = [row]
-        for key, value in dict_by_column_name.items():
-            list_of_ordered_dicts_sorted_by_column += value
+        list_of_ordered_dicts_sorted_by_column = sorted(list_of_ordered_dicts, key=itemgetter(column_name))
         for func in list_of_functions:
             func(list_of_ordered_dicts_sorted_by_column)
     return group_by
@@ -71,7 +60,6 @@ def reverse_field_order_in_ordered_dict_list(list_of_functions):
     def reverse_ordered_dict(dict):
         return OrderedDict(reversed(list(dict.items())))
 
-
     def reverse_field_order(list_of_ordered_dicts):
         new_data = list(map(reverse_ordered_dict, list_of_ordered_dicts))
         for func in list_of_functions:
@@ -80,12 +68,11 @@ def reverse_field_order_in_ordered_dict_list(list_of_functions):
 
 
 def save_to_output_directory_by_field(list_of_functions, folderpath, fieldname='Target Type'):
-
-    def start_next_file(row, fieldname):
+    def start_next_file(row):
         return ([row], row[fieldname])
 
-    def write_file(folderpath, fieldname, list_of_ordered_dicts):
-        filename = '{0}.csv'.format(fieldname)
+    def write_file(current_fieldname, list_of_ordered_dicts):
+        filename = '{0}.csv'.format(current_fieldname)
         filepath = os.path.join(folderpath, filename)
         fieldname_list = list_of_ordered_dicts[0].keys()
         with open(filepath, 'w', newline='') as csvfile:
@@ -100,9 +87,9 @@ def save_to_output_directory_by_field(list_of_functions, folderpath, fieldname='
             if row[fieldname] == current_fieldname:
                 current_list.append(row)
             else:
-                write_file(folderpath, current_fieldname, current_list)
-                current_list, current_fieldname = start_next_file(row, fieldname)
-        write_file(folderpath, current_fieldname, current_list)
+                write_file(current_fieldname, current_list)
+                current_list, current_fieldname = start_next_file(row)
+        write_file(current_fieldname, current_list)
         for func in list_of_functions:
             func(list_of_ordered_dicts_grouped_by_field)
     return save_output

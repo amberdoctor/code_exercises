@@ -220,10 +220,10 @@ class TestCSVETLDAG(unittest.TestCase):
                           OrderedDict({'Status': 'Active', 'Foo': 'Bar3', 'Target Type': 'City'}),
                           OrderedDict({'Status': 'Active', 'Foo': 'Bar4', 'Target Type': 'City'}),
                           OrderedDict({'Status': 'Active', 'Foo': 'Bar6', 'Target Type': 'City'}),
+                          OrderedDict({'Status': 'Active', 'Foo': 'Bar7', 'Target Type': 'Country'}),
+                           OrderedDict({'Status': 'Active', 'Foo': 'Bar2', 'Target Type': 'County'}),
                           OrderedDict({'Status': 'Active', 'Foo': 'Bar1', 'Target Type': 'State'}),
-                          OrderedDict({'Status': 'Active', 'Foo': 'Bar5', 'Target Type': 'State'}),
-                          OrderedDict({'Status': 'Active', 'Foo': 'Bar2', 'Target Type': 'County'}),
-                          OrderedDict({'Status': 'Active', 'Foo': 'Bar7', 'Target Type': 'Country'})]
+                          OrderedDict({'Status': 'Active', 'Foo': 'Bar5', 'Target Type': 'State'})]
         test_filter_fn = group_by_column([self.record])
         test_filter_fn(test_value)
 
