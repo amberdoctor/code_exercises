@@ -10,12 +10,9 @@ def aggregate_top_in_field(list_of_functions, name_of_field='Name'):
     def aggregate_top(list_of_dicts):
         name_count = {'fieldname':name_of_field, 'counts':{}}
         for row in list_of_dicts:
-            value = row[name_of_field]
-            if value in name_count['counts']:
-                name_count["counts"][value] += 1
-            else:
-                name_count['counts'][value] = 1
-
+            fieldname_value = row[name_of_field]
+            current_count = name_count['counts'].get(fieldname_value, 0)
+            name_count['counts'][fieldname_value] = current_count + 1
         for func in list_of_functions:
             func(name_count)
     return aggregate_top
